@@ -1,3 +1,4 @@
 04.05.21
-zainstaliwanie gita 
+zainstalowanie gita 
 zainstalowanie githuba i zrobienie konta
+zainstalowanie dockera
