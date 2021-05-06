@@ -4,5 +4,8 @@ zainstalowanie githuba i zrobienie konta
 zainstalowanie dockera
 zainstalowanie WSL
 obraz alpine/git 
-stworzenie docker-compose
-robienie kontenerów
+
+05.05.21
+stworzenie pliku docker-compose.yml
+uruchomienie kontenerów
+
