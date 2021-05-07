@@ -8,4 +8,7 @@ obraz alpine/git
 05.05.21
 stworzenie pliku docker-compose.yml
 uruchomienie kontenerów
-
+06.05.21
+próba podpięcia bazy danych mysql do huginna
+07.05.21
+huginn jako osobny kontener
