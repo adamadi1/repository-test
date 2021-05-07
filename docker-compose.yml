@@ -20,21 +20,18 @@ services:
             MYSQL_DATABASE: huginn
             MYSQL_USER: user
             MYSQL_PASSWORD: password
+        security_opt:
+            - seccomp:unconfined
 
             
     huginn:
         image: huginn/huginn:latest
         container_name: huginn
+        environment: 
+            HUGINN_DATABASE_NAME: huginn
+            HUGINN_DATABASE_USERNAME: user
+            HUGINN_DATABASE_PASSWORD: password
+            HUGINN_DATABASE_HOST: mysql
+            HUGINN_DATABASE_PORT: 3306
 
-  db:
-     image: mysql
-      command: --default-authentication-plugin=mysql_native_password
-      restart: always
-       environment:
-        MYSQL_ROOT_PASSWORD: example
 
- adminer:
-        image: adminer
-        restart: always
-        ports:
-     - 8080:8080
