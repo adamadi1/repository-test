@@ -13,4 +13,7 @@ próba podpięcia bazy danych mysql do huginna
 07.05.21
 huginn jako osobny kontener
 zrobienie bota wysyłającego maila o przetargach 
-pobranie linuxa 
+pobranie linuxa
+10.05.21
+przenoszenie plików na linuxa
+odpalenie agenta wysyłającego przetargi firmy na e-maila
