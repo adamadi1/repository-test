@@ -1,0 +1,12 @@
+# github.com/cenkalti/backoff v2.1.1+incompatible
+github.com/cenkalti/backoff
+# github.com/dghubble/go-twitter v0.0.0-20201011215211-4b180d0cc78d
+## explicit
+github.com/dghubble/go-twitter/twitter
+# github.com/dghubble/sling v1.3.0
+github.com/dghubble/sling
+# github.com/google/go-querystring v1.0.0
+github.com/google/go-querystring/query
+# github.com/mattn/go-sqlite3 v1.10.0
+## explicit
+github.com/mattn/go-sqlite3
