@@ -1,6 +1,10 @@
-version: '3'
+version: '3.1'
 
 services: 
+
+
+
+
 
     whoami:
         container_name: whoami
@@ -16,8 +20,18 @@ services:
             MYSQL_DATABASE: huginn
             MYSQL_USER: user
             MYSQL_PASSWORD: password
+        security_opt:
+            - seccomp:unconfined
+
             
-    
     huginn:
         image: huginn/huginn:latest
         container_name: huginn
+        environment: 
+            HUGINN_DATABASE_NAME: huginn
+            HUGINN_DATABASE_USERNAME: user
+            HUGINN_DATABASE_PASSWORD: password
+            HUGINN_DATABASE_HOST: mysql
+            HUGINN_DATABASE_PORT: 3306
+
+
