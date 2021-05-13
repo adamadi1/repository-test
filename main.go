@@ -1,30 +1,45 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"fmt"
+	"time"
 
-	"github.com/mattn/go-sqlite3"
 	"github.com/dghubble/go-twitter/twitter"
+	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
-const followingProfileId int
+const followingProfileId int64 = 1392097083788771328
+const followersTable = "followers"
 
 type Follower struct {
 	Name string
-	Id string
+	Id   int64
+}
+
+type credentials struct {
+	clientID     string
+	clientSecret string
 }
 
 func main() {
-	db := initStorage()
+	db := getDB()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+	defer cancel()
 
-	client := getTwitterClient()
-	followers, err := getFollowersFromProfileWithId(1392097083788771328)
+	initStorage(ctx, db)
+
+	client := getTwitterClient(ctx, credentials{clientID: "blabla", clientSecret: "blabla"})
+	followers, err := getFollowersFromProfileWithId(client, followingProfileId)
 	if err != nil {
-		fmt.Fatalf("Can't get followers from Twitter: %v", err)
+		panic(fmt.Sprintf("Can't get followers from Twitter: %v", err))
 	}
-	savedFollowers, err := getFollowersFromStorage(db, 1392097083788771328)
+
+	savedFollowers, err := getFollowersFromStorage(db, followingProfileId)
 	if err != nil {
-		fmt.Fatalf("Can't get followers from storage: %v", err)
+		panic(fmt.Sprintf("Can't get followers from storage: %v", err))
 	}
 
 	unfollowed := unfollowed(followers, savedFollowers)
@@ -36,57 +51,90 @@ func main() {
 	}
 }
 
-func initStorage() {
-	db := klientSqlLite() 
-	var (
-		queryGetUsers db.Query = "SELECT user_id, first_name, latest_name, active, modified_date FROM users"
-	)
-	// @todo
+func initStorage(ctx context.Context, db *sql.DB) {
+	if !isStorageFresh(ctx, db) {
+		return
+	}
 
-	if isStorageFresh(db.Querty) {
-		err := migrateStorage(db.Querty)
+	err := migrateStorage(ctx, db)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func isStorageFresh(ctx context.Context, db *sql.DB) bool {
+	rows, err := db.QueryContext(ctx, "SHOW TABLES")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	var table string
+	for rows.Next() {
+		err := rows.Scan(&table)
 		if err != nil {
-			fmt.Fatalf("Can't migrate db: %v", err)
+			panic(err.Error())
+		}
+
+		if table == followersTable {
+			return true
 		}
 	}
-	// @todo
+
+	return false
 }
 
-func isStorageFresh(db) bool {
-	// @todo sprawdzasz czy istnieje tabela Followers
+func getDB() *sql.DB {
+	database, err := sql.Open("sqlite3", "./bogo.db")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return database
 }
 
-func migrateStorage(db) error {
-	database, _ :=
-	sql.Open("sqlite3", "./bogo.db")
-	statement, _ =
-	database.Prepare("CREATE TABLE people user_id(1392097083788771328)")
-	tabele.Followers()
-	// @todo wysylasz SQL, ktore ma stworzyc baze danych czy tabele Followers
+func migrateStorage(ctx context.Context, db *sql.DB) error {
+	const createTableQuery = "CREATE TABLE IF NOT EXISTS `?` (id DECIMAL, name TEXT)"
+	_, err := db.ExecContext(ctx, createTableQuery, followersTable)
+
+	return err
 }
 
-func getTwitterClient(creds *Credentials) (twitter.Client, error) {
-	httpClient := config.Client(oauth1.NoContext, token)
-	client := twitter.NewClient(httpClient)
-	// @todo
+func getTwitterClient(ctx context.Context, creds credentials) *twitter.Client {
+	config := &clientcredentials.Config{
+		ClientID:     creds.clientID,
+		ClientSecret: creds.clientSecret,
+		TokenURL:     "https://api.twitter.com/oauth2/token",
+	}
+
+	return twitter.NewClient(config.Client(ctx))
 }
 
-func getFollowersFromProfileWithId(1392097083788771328) ([]Follower, error) {
-
+func getFollowersFromProfileWithId(client *twitter.Client, id int64) ([]Follower, error) {
 	res := make([]Follower, 0)
-	// @todo
-	// pobrac followersow z jakiegos profilu z Twittera
-	// zamienic ich na strukture []Follower
+
+	followers, _, err := client.Followers.List(&twitter.FollowerListParams{
+		UserID: id,
+		Cursor: 0,
+		Count:  100,
+	})
+
+	if err != nil {
+		return res, err
+	}
+
+	for _, twitterFollower := range followers.Users {
+		res = append(res, Follower{Id: twitterFollower.ID, Name: twitterFollower.Name})
+	}
 
 	return res, nil
 }
 
-func getFollowersFromStorage(db.Querty, 1392097083788771328) ([]Follower, error) {
+func getFollowersFromStorage(db.Querty, id int) ([]Follower, error) {
 	// @todo
 }
 
 // unfollowed zwraca followersów, którzy są w fromStorage, ale nie ma ich w fromTwitter
-func unfollowed(fromTwitter []Follower, fromStorage []Follower) ([]Follower) {
+func unfollowed(fromTwitter []Follower, fromStorage []Follower) []Follower {
 	// @todo
 }
 
