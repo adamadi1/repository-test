@@ -25,66 +25,83 @@ type credentials struct {
 }
 
 func main() {
+	fmt.Println("Starting..")
+
 	db := getDB()
+	defer db.Close()
+
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
 	initStorage(ctx, db)
 
 	client := getTwitterClient(ctx, credentials{clientID: "blabla", clientSecret: "blabla"})
-	followers, err := getFollowersFromProfileWithId(client, followingProfileId)
+	followingNow, err := getFollowersFromProfileWithId(client, followingProfileId)
 	if err != nil {
 		panic(fmt.Sprintf("Can't get followers from Twitter: %v", err))
 	}
 
-	savedFollowers, err := getFollowersFromStorage(db, followingProfileId)
+	// followingNow := []Follower{
+	// 	{
+	// 		Id: 789,
+	// 		Name: "Piotr",
+	// 	},
+	// }
+
+	followingPrevious, err := getFollowersFromStorage(ctx, db, followingProfileId)
 	if err != nil {
 		panic(fmt.Sprintf("Can't get followers from storage: %v", err))
 	}
 
-	unfollowed := unfollowed(followers, savedFollowers)
-	printFollowers(unfollowed)
+	fmt.Println("")
 
-	err := saveFollowers(db, followers)
+	fmt.Println("Now followers:")
+	printFollowers(followingNow)
+
+	fmt.Println("Previous followers:")
+	printFollowers(followingPrevious)
+
+	difference := checkDifference(followingPrevious, followingNow)
+
+	fmt.Println("Unfollowing:")
+	printFollowers(difference)
+
+	err = saveFollowers(ctx, db, followingProfileId, followingNow)
 	if err != nil {
-		fmt.Fatalf("Can't save new followers to storage: %v", err)
+		panic(fmt.Sprintf("Can't save new followers to storage: %v", err))
 	}
 }
 
-func initStorage(ctx context.Context, db *sql.DB) {
-	if !isStorageFresh(ctx, db) {
-		return
+func saveFollowers(ctx context.Context, db *sql.DB, mainId int64, now []Follower) error {
+	_, err := db.ExecContext(ctx, fmt.Sprintf("DELETE FROM `%s` WHERE main_id = ?", followersTable), mainId)
+	if err != nil {
+		return fmt.Errorf("can't remove old followers: %w", err)
 	}
 
+	for _, follower := range now {
+		_, err := db.ExecContext(
+			ctx,
+			fmt.Sprintf("INSERT INTO `%s` VALUES (?, ?, ?)", followersTable),
+			mainId, follower.Id, follower.Name,
+		)
+
+		if err != nil {
+			return fmt.Errorf("can't add followers: %w (mainId: %d, follower: %+v)", err, mainId, follower)
+		}
+	}
+
+	return nil
+}
+
+func initStorage(ctx context.Context, db *sql.DB) {
 	err := migrateStorage(ctx, db)
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
-func isStorageFresh(ctx context.Context, db *sql.DB) bool {
-	rows, err := db.QueryContext(ctx, "SHOW TABLES")
-	if err != nil {
-		panic(err.Error())
-	}
-
-	var table string
-	for rows.Next() {
-		err := rows.Scan(&table)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		if table == followersTable {
-			return true
-		}
-	}
-
-	return false
-}
-
 func getDB() *sql.DB {
-	database, err := sql.Open("sqlite3", "./bogo.db")
+	database, err := sql.Open("sqlite3", "./test.db")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -93,8 +110,10 @@ func getDB() *sql.DB {
 }
 
 func migrateStorage(ctx context.Context, db *sql.DB) error {
-	const createTableQuery = "CREATE TABLE IF NOT EXISTS `?` (id DECIMAL, name TEXT)"
-	_, err := db.ExecContext(ctx, createTableQuery, followersTable)
+	_, err := db.ExecContext(ctx, fmt.Sprintf(
+		"CREATE TABLE IF NOT EXISTS `%s` (main_id INTEGER, followers_id INTEGER, followers_name TEXT)",
+		followersTable,
+	), followersTable)
 
 	return err
 }
@@ -129,15 +148,61 @@ func getFollowersFromProfileWithId(client *twitter.Client, id int64) ([]Follower
 	return res, nil
 }
 
-func getFollowersFromStorage(db.Querty, id int) ([]Follower, error) {
-	// @todo
+func getFollowersFromStorage(ctx context.Context, db *sql.DB, id int64) ([]Follower, error) {
+	//
+	// Followers
+	// main_id | main_name | followers_id | followers_name
+	// -------------------------------------------------------------------------------------------------
+	// 123 | Krzysztof Gzocha | 456 | Followers1
+	// 123 | Krzysztof Gzocha | 789 | Followers2
+
+	rows, err := db.QueryContext(ctx, fmt.Sprintf("SELECT followers_id, followers_name FROM `%s` WHERE main_id = ?", followersTable), id)
+	if err != nil {
+		return nil, err
+	}
+
+	tabelaFollowersow := make([]Follower, 0)
+	for rows.Next() {
+		var followerId int64
+		var followerName string
+
+		err := rows.Scan(&followerId, &followerName)
+		if err != nil {
+			return tabelaFollowersow, err
+		}
+
+		tabelaFollowersow = append(tabelaFollowersow, Follower{
+			Name: followerName,
+			Id:   followerId,
+		})
+	}
+
+	return tabelaFollowersow, nil
 }
 
-// unfollowed zwraca followersów, którzy są w fromStorage, ale nie ma ich w fromTwitter
-func unfollowed(fromTwitter []Follower, fromStorage []Follower) []Follower {
-	// @todo
+func checkDifference(now, previous []Follower) []Follower {
+	wynik := make([]Follower, 0)
+
+	for _, elementNow := range now {
+		foundInPrevious := false
+
+		for _, elementPrevious := range previous {
+			if elementNow.Id == elementPrevious.Id {
+				foundInPrevious = true
+				break
+			}
+		}
+
+		if !foundInPrevious {
+			wynik = append(wynik, elementNow)
+		}
+	}
+
+	return wynik
 }
 
-func printFollowers(follower []Follower) {
-	// @todo
+func printFollowers(followers []Follower) {
+	for _, follower := range followers {
+		fmt.Printf("- ID: %d, Name: %s\n", follower.Id, follower.Name)
+	}
 }
