@@ -14,6 +14,8 @@ import (
 const followingProfileId int64 = 1392097083788771328
 const followersTable = "followers"
 
+
+
 type Follower struct {
 	Name string
 	Id   int64
@@ -23,6 +25,7 @@ type credentials struct {
 	clientID     string
 	clientSecret string
 }
+var follower *ClientFollower
 
 func main() {
 	db := getDB()
@@ -112,7 +115,7 @@ func getTwitterClient(ctx context.Context, creds credentials) *twitter.Client {
 func getFollowersFromProfileWithId(client *twitter.Client, id int64) ([]Follower, error) {
 	res := make([]Follower, 0)
 
-	followers, _, err := client.Followers.List(&twitter.FollowerListParams{
+	followers, _, err := client.Followers.List(&twitter.FollowerListParams){
 		UserID: id,
 		Cursor: 0,
 		Count:  100,
@@ -129,15 +132,41 @@ func getFollowersFromProfileWithId(client *twitter.Client, id int64) ([]Follower
 	return res, nil
 }
 
-func getFollowersFromStorage(db.Querty, id int) ([]Follower, error) {
-	// @todo
+func getFollowersFromStorage(db.Querty, id int64) ([]Follower, error) {
+	client, err := storage.unfollowed(context.Background())
+	if !fromStorage(ctx, db)= nil{
+		return nil, errors.New("missing followers from storage")
+	}
+	if !fromTwitter(ctx, db)= nil{
+		return true
+	}
+	
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
-// unfollowed zwraca followersów, którzy są w fromStorage, ale nie ma ich w fromTwitter
-func unfollowed(fromTwitter []Follower, fromStorage []Follower) []Follower {
-	// @todo
+
+func unfollowed(db.Querty, fromTwitter) (id int64 []Follower) (&config configfromStorage []Follower) ([]Follower, error) {
+	if !Follower ==""{
+		return nil, errors.New("can't find followers")
+
+	}
+if err != nil {
+		panic(err.Error())
+	}
 }
 
 func printFollowers(follower []Follower) {
-	// @todo
+	var print printFollowers
+	fmt.Printf("%+v"printFollowers)
+	if Printf.Follower== ""{
+		return nil, errors.New("Missing follower")
+	}
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+
 }
