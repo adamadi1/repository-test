@@ -8,6 +8,18 @@ func TestSortuj(t *testing.T) {
 	liczby := generujLiczby(ileLiczb)
 	posortowane := sortujRosnaco(liczby)
 
+	if len(liczby) == 0 {
+		t.Fatalf("funkcja 'generujLiczby' zwróciła zero wyników :( ")
+	}
+
+	if len(posortowane) == 0 {
+		t.Fatalf("funkcja 'posortowane' zwróciła zero wyników :( ")
+	}
+
+	if len(liczby) != len(posortowane) {
+		t.Fatalf("Liczb jest %d, ale posortowanych jest %d, a powinno ich być tyle samo", len(liczby), len(posortowane))
+	}
+
 	var poprzednia int
 	ustawionoPoprzednia := false
 
