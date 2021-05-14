@@ -3,7 +3,7 @@ package main
 import (
 	"math/rand"
 	"time"
-	"fmt"
+	
 )
 
 const ileLiczb = 500000
