@@ -3,6 +3,7 @@ package main
 import (
 	"math/rand"
 	"time"
+	"fmt"
 )
 
 const ileLiczb = 500000
@@ -25,20 +26,26 @@ func generujLiczby(ilosc uint) []int {
 
 func sortujRosnaco(liczby []int) []int {
 	posortowane := make([]int, 0)
-	for j := 1; j< i; j++{
-		if liczby[j-1] > liczby[j]{
-			asd := liczby[j]
-			liczby[j] = liczby[j-1]
-			liczby[j-1] = asd
-		}
-	
+	for j := 0; j < len(liczby); j++ {
+		aktualnaLiczbaJ := liczby[j]
 	}
+	for k := 0; k < j - 1; k++ {
+		aktualnaLiczbaK := liczby[k]
+	}
+	for l :=0; l < k < j - 1; l++{
 
 	}
-	
+	{
+	if (array[l] > array[l+1])
+	{
+		swap       = array[l]
+		array[l]   = array[l+1]
+		array[l+1] = swap;
+	}
+}
+}
+
 
  	// @todo zadania dla Adama
 	// na potrzeby testu zwracam liczby, ale trzeba zwracac posortowane
 	return posortowane
-}
-
