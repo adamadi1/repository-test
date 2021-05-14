@@ -25,11 +25,20 @@ func generujLiczby(ilosc uint) []int {
 
 func sortujRosnaco(liczby []int) []int {
 	posortowane := make([]int, 0)
+	for j := 1; j< i; j++{
+		if liczby[j-1] > liczby[j]{
+			asd := liczby[j]
+			liczby[j] = liczby[j-1]
+			liczby[j-1] = asd
+		}
+	
+	}
 
-	// @todo zadania dla Adama
+	}
+	
+
+ 	// @todo zadania dla Adama
 	// na potrzeby testu zwracam liczby, ale trzeba zwracac posortowane
-	// return liczby
-
 	return posortowane
 }
 
