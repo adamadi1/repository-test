@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-const ileLiczb = 500000
+const ileLiczb = 1000
 
 func main() {
 	liczby := generujLiczby(ileLiczb)
@@ -24,19 +24,17 @@ func generujLiczby(ilosc uint) []int {
 }
 
 func sortujRosnaco(liczby []int) []int {
-	for i:= 0; i < len(liczby)-i-1; i++ {
+	for i:= 0; i < len(liczby); i++ {
 		for j:= 0; j < len(liczby)-i-1; j++{
 			if (liczby[j] > liczby[j+1]) {
 				liczby[j], liczby[j+1] = liczby[j+1], liczby[j]
 			}
 		}
-	}
+		}
 	return liczby
 }
 func posortowane() {
 	liczby:= []int{ileLiczb};
 	fmt.Print(sortujRosnaco(liczby))
-
-
 }
 
