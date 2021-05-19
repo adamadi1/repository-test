@@ -1,0 +1,62 @@
+package main
+
+import (
+	"testing"
+)
+
+func TestSortuj(t *testing.T) {
+	liczby := generujLiczby(ileLiczb)
+	posortowane := Sort(liczby)
+
+	if len(liczby) == 0 {
+		t.Fatalf("funkcja 'generujLiczby' zwróciła zero wyników :( ")
+	}
+
+	if len(posortowane) == 0 {
+		t.Fatalf("funkcja 'posortowane' zwróciła zero wyników :( ")
+	}
+
+	if len(liczby) != len(posortowane) {
+		t.Fatalf("Liczb jest %d, ale posortowanych jest %d, a powinno ich być tyle samo", len(liczby), len(posortowane))
+	}
+
+	var poprzednia int
+	ustawionoPoprzednia := false
+
+	for _, liczba := range posortowane {
+		if !ustawionoPoprzednia {
+			poprzednia = liczba
+			ustawionoPoprzednia = true
+			continue
+		}
+
+		if liczba < poprzednia {
+			t.Fatalf("Liczba %d jest mniejsza od liczby %d", liczba, poprzednia)
+			return
+		}
+
+		poprzednia = liczba
+	}
+}
+
+func BenchmarkSortujRosnaco(b *testing.B) {
+	liczby := generujLiczby(ileLiczb)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		sortujRosnaco(liczby)
+	}
+}
+
+func BenchmarkSortuj(b *testing.B) {
+	liczby := generujLiczby(ileLiczb)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		Sort(liczby)
+	}
+}
+
+// BubbleSort    	    2475	    450518 ns/op	       0 B/op	       0 allocs/op
+// QuickSort    	   27566	     42264 ns/op	      56 B/op	       2 allocs/op
