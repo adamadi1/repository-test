@@ -1,0 +1,51 @@
+package main
+
+import (
+	"math/rand"
+	"sort"
+	"time"
+)
+
+const ileLiczb = 1000
+
+func main() {
+	liczby := generujLiczby(ileLiczb)
+	sortujRosnaco(liczby)
+}
+
+func generujLiczby(ilosc uint) []int {
+	wynik := make([]int, 0)
+	gen := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	for i := uint(0); i <= ilosc; i++ {
+		wynik = append(wynik, gen.Int())
+	}
+
+	return wynik
+}
+
+func sortujRosnaco(liczby []int) []int {
+	for i := 0; i < len(liczby); i++ {
+		zmiana := false
+		for j := 0; j < len(liczby)-i-1; j++ {
+			if liczby[j] > liczby[j+1] {
+				liczby[j], liczby[j+1] = liczby[j+1], liczby[j]
+				zmiana = true
+			}
+		}
+
+		if !zmiana {
+			break
+		}
+	}
+	return liczby
+}
+
+func Sort(dane []int) []int {
+	posortowane := dane
+	sort.Slice(posortowane, func(i, j int) bool {
+		return dane[i] < dane[j]
+	})
+
+	return posortowane
+}
