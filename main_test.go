@@ -10,6 +10,23 @@ Nunc laoreet, orci vitae pharetra gravida, purus ante dictum mauris, a congue pu
 Aenean dapibus hendrerit ullamcorper. Proin luctus justo at elit accumsan, sit amet scelerisque elit suscipit. Maecenas lacinia arcu vel tempus vulputate. Fusce eget ex varius, placerat mauris volutpat, pretium dui. Sed placerat vitae lacus at porttitor. Mauris ut scelerisque diam, vel vulputate neque. Aenean egestas varius lacus a sollicitudin. Quisque tincidunt, turpis in congue aliquet, quam leo lobortis leo, id fermentum enim felis in lacus. Nulla nec augue euismod, elementum urna quis, vehicula justo. Nulla in ipsum ac odio sollicitudin semper. Sed nisl sem, tristique non sollicitudin id, molestie suscipit dui. Proin nec lobortis ex. Donec imperdiet sem ante, at eleifend nibh aliquam ac. Quisque sed vulputate lectus.
 Duis rutrum rutrum arcu, vestibulum porttitor lorem gravida at. Praesent at sollicitudin est. Fusce non risus pulvinar, tristique orci ut, gravida diam. Nunc nec felis a enim ullamcorper eleifend eget vel nisl. Morbi non elit quis augue finibus ultrices ac non enim. Duis id libero aliquet, eleifend tortor a, euismod risus. Ut interdum, leo nec feugiat posuere, tortor neque rhoncus nunc, eget faucibus elit elit commodo purus. Vivamus vestibulum ipsum quis lorem hendrerit, ac luctus odio sagittis. Nullam interdum nibh ut arcu dignissim pulvinar. Phasellus nec lacinia velit. Sed at finibus urna. Sed fermentum sapien rhoncus lacus blandit venenatis. Phasellus porttitor sem nunc, vitae congue ex dignissim eu. Vestibulum gravida, lacus sit amet auctor viverra, elit odio convallis sem, in condimentum ipsum massa at orci.`
 
+func TestHistogramProcentowy_Prosty(t *testing.T) {
+	h := ProcentowyHistogram("aaaaabbbbb")
+
+	if len(h) != 2 {
+		t.Fatalf("Histogram ma dlugosc %d, a powinien miec 2", len(h))
+	}
+
+	histogramA, ok := h["a"]
+	if !ok {
+		t.Fatalf("Brak literki A w histogramie")
+	}
+
+	if histogramA != float32(0.5) {
+		t.Fatalf("Histogram literki A powinien wynosic 50%%, a wynosi: %f", histogramA)
+	}
+}
+
 func TestHistogram_Prosty(t *testing.T) {
 	h := Histogram("aaaabbbccd")
 
@@ -32,7 +49,7 @@ func TestHistogram_Prosty(t *testing.T) {
 func TestHistogram_LoremIpsum(t *testing.T) {
 	h := Histogram(loremIpsum)
 
-	if len(h) < len(znaki) {
+	if len(h) != 20 {
 		t.Fatalf("Histogram zawiera tylko %d znaków, a powinien %d", len(h), len(znaki))
 	}
 }
