@@ -1,35 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
-const Tekst = "aab"
+var znaki = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+	"n", "o", "p", "r", "s", "t", "u", "w", "x", "y", "z"}
 
-//var znaki = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-//"n", "o", "p", "r", "s", "t", "u", "w", "x", "y", "z"}
+func Histogram(tekst string) map[string]int {
+	wynik := make(map[string]int)
 
-func main() {
+	for _, znak := range znaki {
+		iloscWystapien := strings.Count(tekst, znak)
+		if iloscWystapien > 0 {
+			wynik[znak] = iloscWystapien
+		}
+	}
 
-	txt1 := "testowy tekst oby działało"
-	txt2 := "bsdadasdbdadadbdbabbbbadadsbbbada"
-	txt3 := ""
-
-	fmt.Println("tekst nr 1: ", txt1)
-	fmt.Println("tekst nr 2: ", txt2)
-	fmt.Println("tekst nr 3: ", txt3)
-
-	histogram1 := strings.Count(txt1, "a")
-	histogram2 := strings.Count(txt2, "b")
-	histogram3 := strings.Count(txt3, "" )
-
-	fmt.Println("\nW pierwszym tekscie liter a jest: ", histogram1)
-	fmt.Println("W drugim tekscie liter b jest: ", histogram2)
-	fmt.Println("Wszytkich znaków jest: ", histogram3)
+	return wynik
 }
 
-//func Histogram(tekst string) map[string]int {
-//wynik := make(map[string]int)
-//return wynik
-//}
+func ProcentowyHistogram(tekst string) map[string]float32 {
+	wynik := make(map[string]float32)
+	// oryginalnyHistogram := Histogram(tekst)
+	// W TYM MIEJSCU
+	// ZADNEGO MAIN
+
+	return wynik
+}
+
+// Majac histogram procentowy wykombinowac jak porównać go z histogramami z wikipedii
+// dla konkretnego języka
+// Porownac każdą literkę w histogramie między tym co mamy, a tym co jest w wikipedii
+// i wynik przedstawić jako procentowe podobienstwo
+
+// np. w wikipedii lda jezyka X A=50%, B=30%
+// a u nas A=51%, B=29% to jest to całkiem podobne, ale jak bardzo?
