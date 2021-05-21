@@ -22,17 +22,29 @@ func Histogram(tekst string) map[string]int {
 
 func ProcentowyHistogram(tekst string) map[string]float32 {
 	wynik := make(map[string]float32)
-	// oryginalnyHistogram := Histogram(tekst)
-	// W TYM MIEJSCU
-	// ZADNEGO MAIN
+	type asd struct {
+		Lat, Long float64
+	}
 
+	for _, znak2 := range znaki {
+		procenty := strings.Count(tekst, znak2)
+
+		if procenty > 0 {
+			wynik[znak2] = procenty
+		}
+	}
 	return wynik
 }
+
+//var m = map[string]float32{
+
+//oryginalnyHistogram := Histogram(tekst)
+// W TYM MIEJSCU
+// ZADNEGO MAIN
 
 // Majac histogram procentowy wykombinowac jak porównać go z histogramami z wikipedii
 // dla konkretnego języka
 // Porownac każdą literkę w histogramie między tym co mamy, a tym co jest w wikipedii
 // i wynik przedstawić jako procentowe podobienstwo
-
 // np. w wikipedii lda jezyka X A=50%, B=30%
 // a u nas A=51%, B=29% to jest to całkiem podobne, ale jak bardzo?
