@@ -22,29 +22,57 @@ func Histogram(tekst string) map[string]int {
 
 func ProcentowyHistogram(tekst string) map[string]float32 {
 	wynik := make(map[string]float32)
-	type asd struct {
-		Lat, Long float64
+	if len(tekst) == 0 {
+		return wynik
+	}
+	histogram := Histogram(tekst)
+	dlugoscTekstu := len(tekst)
+
+	for znak, ilosc := range histogram {
+		wynik[znak] = float32(ilosc) / float32(dlugoscTekstu)
 	}
 
-	for _, znak2 := range znaki {
-		procenty := strings.Count(tekst, znak2)
-
-		if procenty > 0 {
-			wynik[znak2] = procenty
-		}
-	}
 	return wynik
 }
 
-//var m = map[string]float32{
+// wziete z wikipedii
+var AngielskiHistogram = map[string]float32{
+	"a": 0.08167,
+	"b": 0.01492,
+	"c": 0.02782, // TUTAJ DOPISZ Z WIKIPEDII
+}
 
-//oryginalnyHistogram := Histogram(tekst)
-// W TYM MIEJSCU
-// ZADNEGO MAIN
+var PolskiHistogram = map[string]float32{
+	"a": 0.08910,
+	"b": 0.01535,
+	"c": 0.01486,
+}
 
-// Majac histogram procentowy wykombinowac jak porównać go z histogramami z wikipedii
-// dla konkretnego języka
-// Porownac każdą literkę w histogramie między tym co mamy, a tym co jest w wikipedii
-// i wynik przedstawić jako procentowe podobienstwo
-// np. w wikipedii lda jezyka X A=50%, B=30%
-// a u nas A=51%, B=29% to jest to całkiem podobne, ale jak bardzo?
+
+
+var WszystkieDostepneHistogramy = map[string]map[string]float32{
+	"Polski":    PolskiHistogram,
+	"Angielski": AngielskiHistogram, // trzeba dodac wiecej histogramow
+}
+
+func PorownajZHistogramami(tekst string) string {
+	histogram := ProcentowyHistogram(tekst)
+
+	var najmniejszaRoznica float32 = 999999
+	var wybranyHistogram string
+
+	for nazwa, dostepnyHistogram := range WszystkieDostepneHistogramy {
+		roznica := RoznicaHistogramow(histogram, dostepnyHistogram)
+		if roznica < najmniejszaRoznica {
+			wybranyHistogram = nazwa
+		}
+	}
+
+	return wybranyHistogram
+}
+
+func RoznicaHistogramow(histogram1, histogram2 map[string]float32) float32 {
+	// Tutaj sumujemy różnice między wszystkimi znakami w histogramach i dzielimy przez ilosc znakow
+	// TUTAJ ZADANIE DLA ADAMA
+	return 0
+}
