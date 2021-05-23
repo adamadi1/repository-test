@@ -15,12 +15,22 @@ Detract yet delight written farther his general. If in so bred at dare rose lose
 May indulgence difficulty ham can put especially. Bringing remember for supplied her why was confined. Middleton principle did she procuring extensive believing add. Weather adapted prepare oh is calling. These wrong of he which there smile to my front. He fruit oh enjoy it of whose table. Cultivated occasional old her unpleasing unpleasant. At as do be against pasture covered viewing started. Enjoyed me settled mr respect no spirits civilly. 
 Tiled say decay spoil now walls meant house. My mr interest thoughts screened of outweigh removing. Evening society musical besides inhabit ye my. Lose hill well up will he over on. Increasing sufficient everything men him admiration unpleasing sex. Around really his use uneasy longer him man. His our pulled nature elinor talked now for excuse result. Admitted add peculiar get joy doubtful. 
 `
+const tekstPoPolsku = "Na niebie już gwiazdy się pokazały. Oczy mi się zamykają, jestem ospały. Ale przed zaśnięciem, o Tobie myślę I ten krótki wierszyk przed snem szybko wyślę"
 
-// func TestPorownajHistogramy(t *testing.T) {
-// 	nazwa := PorownajZHistogramami(tekstPoAngielsku)
+func TestPorownajHistogramy(t *testing.T) {
+	nazwa1 := PorownajZHistogramami(tekstPoAngielsku)
+	nazwa2 := PorownajZHistogramami(tekstPoPolsku)
+	h := LiczbaWTekscie("a")
+	if nazwa1[h] > nazwa2[h] {
+	t.Fatalf("Procent litery a w", nazwa1, "jest większa niż w", nazwa2, len(h))
+	}
+	if nazwa2[h] > nazwa1[h] {
+	t.Fatalf("Procent liter a w", nazwa2, "jest więcej niż w", nazwa1, len(h))
+	
 
-// 	// TUTAJ ZADANIE DLA ADAMA
-// }
+
+	// 	// TUTAJ ZADANIE DLA ADAMA
+}
 
 func TestHistogramProcentowy_Prosty(t *testing.T) {
 	h := ProcentowyHistogram("aaaaabbbbb")
