@@ -114,7 +114,7 @@ var WszystkieDostepneHistogramy = map[string]map[string]float32{
 	"Angielski": AngielskiHistogram,
 }
 
-func PorownajZHistogramami(tekst string) string {
+func PodajNazweJezyka(tekst string) string {
 	histogram := ProcentowyHistogram(tekst)
 
 	var najmniejszaRoznica float32 = 999999
@@ -124,6 +124,7 @@ func PorownajZHistogramami(tekst string) string {
 		roznica := RoznicaHistogramow(histogram, dostepnyHistogram)
 		if roznica < najmniejszaRoznica {
 			wybranyHistogram = nazwa
+			najmniejszaRoznica = roznica
 		}
 	}
 
@@ -143,3 +144,4 @@ func RoznicaHistogramow(histogram1, histogram2 map[string]float32) float32 {
 	}
 
 	return sumaRoznic / float32(len(histogram1))
+}

@@ -17,19 +17,17 @@ Tiled say decay spoil now walls meant house. My mr interest thoughts screened of
 `
 const tekstPoPolsku = "Na niebie już gwiazdy się pokazały. Oczy mi się zamykają, jestem ospały. Ale przed zaśnięciem, o Tobie myślę I ten krótki wierszyk przed snem szybko wyślę"
 
-func TestPorownajHistogramy(t *testing.T) {
-	nazwa1 := PorownajZHistogramami(tekstPoAngielsku)
-	nazwa2 := PorownajZHistogramami(tekstPoPolsku)
-	h := LiczbaWTekscie("a")
-	if nazwa1[h] > nazwa2[h] {
-	t.Fatalf("Procent litery a w", nazwa1, "jest większa niż w", nazwa2, len(h))
+func TestPodajNazweJezyka(t *testing.T) {
+	nazwa1 := PodajNazweJezyka(tekstPoAngielsku)
+	nazwa2 := PodajNazweJezyka(tekstPoPolsku)
+
+	if nazwa1 != "Angielski" {
+		t.Fatalf("Angielski tekst zwrocil nazwe: %s", nazwa1)
 	}
-	if nazwa2[h] > nazwa1[h] {
-	t.Fatalf("Procent liter a w", nazwa2, "jest więcej niż w", nazwa1, len(h))
-	
 
-
-	// 	// TUTAJ ZADANIE DLA ADAMA
+	if nazwa2 != "Polski" {
+		t.Fatalf("Polski tekst zwrocil nazwe: %s", nazwa2)
+	}
 }
 
 func TestHistogramProcentowy_Prosty(t *testing.T) {
