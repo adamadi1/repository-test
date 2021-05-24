@@ -15,12 +15,20 @@ Detract yet delight written farther his general. If in so bred at dare rose lose
 May indulgence difficulty ham can put especially. Bringing remember for supplied her why was confined. Middleton principle did she procuring extensive believing add. Weather adapted prepare oh is calling. These wrong of he which there smile to my front. He fruit oh enjoy it of whose table. Cultivated occasional old her unpleasing unpleasant. At as do be against pasture covered viewing started. Enjoyed me settled mr respect no spirits civilly. 
 Tiled say decay spoil now walls meant house. My mr interest thoughts screened of outweigh removing. Evening society musical besides inhabit ye my. Lose hill well up will he over on. Increasing sufficient everything men him admiration unpleasing sex. Around really his use uneasy longer him man. His our pulled nature elinor talked now for excuse result. Admitted add peculiar get joy doubtful. 
 `
+const tekstPoPolsku = "Na niebie już gwiazdy się pokazały. Oczy mi się zamykają, jestem ospały. Ale przed zaśnięciem, o Tobie myślę I ten krótki wierszyk przed snem szybko wyślę"
 
-// func TestPorownajHistogramy(t *testing.T) {
-// 	nazwa := PorownajZHistogramami(tekstPoAngielsku)
+func TestPodajNazweJezyka(t *testing.T) {
+	nazwa1 := PodajNazweJezyka(tekstPoAngielsku)
+	nazwa2 := PodajNazweJezyka(tekstPoPolsku)
 
-// 	// TUTAJ ZADANIE DLA ADAMA
-// }
+	if nazwa1 != "Angielski" {
+		t.Fatalf("Angielski tekst zwrocil nazwe: %s", nazwa1)
+	}
+
+	if nazwa2 != "Polski" {
+		t.Fatalf("Polski tekst zwrocil nazwe: %s", nazwa2)
+	}
+}
 
 func TestHistogramProcentowy_Prosty(t *testing.T) {
 	h := ProcentowyHistogram("aaaaabbbbb")
