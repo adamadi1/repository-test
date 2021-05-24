@@ -1,8 +1,8 @@
 package main
 
 import (
+	"math"
 	"strings"
-	"fmt"
 )
 
 var znaki = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
@@ -111,7 +111,7 @@ var PolskiHistogram = map[string]float32{
 
 var WszystkieDostepneHistogramy = map[string]map[string]float32{
 	"Polski":    PolskiHistogram,
-	"Angielski": AngielskiHistogram, // trzeba dodac wiecej histogramow
+	"Angielski": AngielskiHistogram,
 }
 
 func PorownajZHistogramami(tekst string) string {
@@ -131,22 +131,15 @@ func PorownajZHistogramami(tekst string) string {
 }
 
 func RoznicaHistogramow(histogram1, histogram2 map[string]float32) float32 {
-	var array_size int
-	fmt.Scan(&array_size)
-	array := make([]int, array_size)
-	sum := 0
+	sumaRoznic := float32(0)
+	for znak1, ilosc1 := range histogram1 {
+		ilosc2, istnieje := histogram2[znak1]
+		if !istnieje {
+			sumaRoznic += 1
+			continue
+		}
 
-	 i = map[string]float32{
-		fmt.Scan(&array[i]),
-		sum = PolskiHistogram[i] + AngielskiHistogram[i],
+		sumaRoznic += float32(math.Abs(float64(ilosc1 - ilosc2)))
 	}
 
-	avg := float32(sum) / float32(array_size)
-	
-
-	
-	return 0
-}
-
-// Tutaj sumujemy różnice między wszystkimi znakami w histogramach i dzielimy przez ilosc znakow
-// TUTAJ ZADANIE DLA ADAMA
+	return sumaRoznic / float32(len(histogram1))
